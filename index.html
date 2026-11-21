@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TA'MLAB — Aqlli Oshxona Yordamchisi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        alabaster: '#FAF8F5',
+                        espresso: '#121110',
+                        charcoal: '#1C1A18',
+                        saffron: {
+                            400: '#FBBF24',
+                            500: '#D97706',
+                            600: '#B45309',
+                        },
+                        sage: {
+                            50: '#F2F7F4',
+                            100: '#E1EDE6',
+                            500: '#2E6F40',
+                            600: '#235631',
+                            700: '#1B4326',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-alabaster text-slate-800 dark:bg-espresso dark:text-stone-100 transition-colors duration-300 min-h-screen flex flex-col selection:bg-saffron-500 selection:text-white">
+
+    <!-- YUQORI NAVIGATSIYA PANELI (HEADER) -->
+    <header class="sticky top-0 z-40 bg-alabaster/90 dark:bg-espresso/90 glass-panel border-b border-stone-200/80 dark:border-stone-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- Brend va Custom SVG Logotip -->
+            <button onclick="navigateToHome()" class="flex items-center gap-3.5 text-left group focus:outline-none">
+                <div class="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-stone-900 to-stone-800 dark:from-stone-800 dark:to-stone-900 border border-stone-700/60 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+                    <!-- Custom Minimalist Geometric Culinary Emblem -->
+                    <svg class="w-6 h-6 text-saffron-400" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 4C16 4 19.5 8.2 19.5 11.5C19.5 13.433 17.933 15 16 15C14.067 15 12.5 13.433 12.5 11.5C12.5 8.2 16 4 16 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 22C6 17.5817 10.4772 14 16 14C21.5228 14 26 17.5817 26 22" stroke="#F8FAFC" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4 25.5H28" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                        <circle cx="16" cy="21" r="1.5" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl sm:text-2xl font-extrabold tracking-wider text-stone-900 dark:text-white">
+                            TA'M<span class="text-saffron-500">LAB</span>
+                        </span>
+                        <span class="hidden md:inline-block text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md bg-stone-200/80 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+                            Studio
+                        </span>
+                    </div>
+                    <p class="text-xs text-stone-500 dark:text-stone-400 font-medium tracking-wide">
+                        Aqlli Oshxona Yordamchisi
+                    </p>
+                </div>
+            </button>
+
+            <!-- Markaziy Navigatsiya Tugmalari (Desktop) -->
+            <nav class="hidden lg:flex items-center gap-1 bg-stone-200/60 dark:bg-charcoal p-1.5 rounded-2xl border border-stone-200 dark:border-stone-800">
+                <button onclick="navigateToHome()" id="nav-discover" class="px-4 py-2 rounded-xl text-sm font-semibold bg-white dark:bg-stone-800 text-stone-900 dark:text-white shadow-sm transition">
+                    Bosh sahifa
+                </button>
+                <button onclick="scrollToIngredients()" class="px-4 py-2 rounded-xl text-sm font-semibold text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white transition flex items-center gap-2">
+                    <span>Mening masalliqlarim</span>
+                    <span id="header-pantry-count" class="px-1.5 py-0.5 text-xs rounded-md bg-sage-500 text-white font-bold">0</span>
+                </button>
+                <button onclick="openRandomRecipe()" class="px-4 py-2 rounded-xl text-sm font-semibold text-stone-600 dark:text-stone-300 hover:text-saffron-600 dark:hover:text-saffron-400 transition flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-saffron-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                    <span>Tasodifiy taom</span>
+                </button>
+            </nav>
+
+            <!-- O'ng Funksional Tugmalar -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Tasodifiy taom (Mobile) -->
+                <button onclick="openRandomRecipe()" title="Tasodifiy taom tavsiyasi" class="lg:hidden p-2.5 rounded-xl bg-amber-500/10 text-saffron-600 dark:text-saffron-400 hover:bg-amber-500/20 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                </button>
+
+                <!-- Xarid ro'yxati tugmasi -->
+                <button onclick="openDrawer('shopping')" class="relative flex items-center gap-2 px-3 py-2.5 rounded-xl bg-stone-200/70 hover:bg-stone-300/70 dark:bg-charcoal dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 text-sm font-semibold transition">
+                    <svg class="w-5 h-5 text-sage-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                    <span class="hidden sm:inline">Xarid ro'yxati</span>
+                    <span id="shopping-count" class="px-1.5 py-0.5 text-xs rounded-full bg-sage-600 text-white font-bold">0</span>
+                </button>
+
+                <!-- Saqlanganlar tugmasi -->
+                <button onclick="openDrawer('saved')" class="relative flex items-center gap-2 px-3 py-2.5 rounded-xl bg-stone-200/70 hover:bg-stone-300/70 dark:bg-charcoal dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 text-sm font-semibold transition">
+                    <svg class="w-5 h-5 text-rose-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>
+                    <span class="hidden md:inline">Saqlanganlar</span>
+                    <span id="saved-count" class="px-1.5 py-0.5 text-xs rounded-full bg-rose-500 text-white font-bold">0</span>
+                </button>
+
+                <!-- Dark/Light Tema Tugmasi -->
+                <button onclick="toggleTheme()" id="theme-btn" aria-label="Mavzuni o'zgartirish" class="p-2.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 hover:opacity-90 transition shadow-sm">
+                    <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ASOSIY KONTENT -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- HERO VA TEZKOR QIDIRUV BO'LIMI -->
+        <section class="relative overflow-hidden rounded-3xl bg-stone-900 dark:bg-charcoal text-white p-6 sm:p-10 shadow-xl border border-stone-800">
+            <!-- Dekorativ fon nurlari -->
+            <div class="absolute -top-24 -right-24 w-80 h-80 bg-saffron-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-sage-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-3xl space-y-5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-saffron-400 text-xs font-semibold tracking-wider uppercase">
+                    <span>✦ Aqlli Kulinariya Algoritmi</span>
+                </div>
+                <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-white">
+                    Oshxonangizdagi bor masalliqlardan <span class="text-saffron-400 italic">mukammal taom</span> yarating.
+                </h1>
+                <p class="text-stone-300 text-sm sm:text-base max-w-2xl leading-relaxed">
+                    Uyingizda mavjud mahsulotlarni belgilang yoki tayyor to‘plamlardan birini tanlang. Tizim sizga hozirning o‘zida pishirish mumkin bo‘lgan eng sara milliy va jahon taomlarini aniqlab beradi.
+                </p>
+
+                <!-- Jonli Qidiruv Paneli -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <div class="relative flex-1">
+                        <svg class="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input 
+                            type="text" 
+                            id="global-search" 
+                            oninput="handleGlobalSearch()"
+                            placeholder="Masalliq yoki taom nomini yozing (masalan: Tovuq, Qozon kabob, Pishloq)..." 
+                            class="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-white/10 border border-white/15 text-white placeholder-stone-400 focus:outline-none focus:border-saffron-400 focus:bg-white/15 transition text-sm"
+                        >
+                        <button id="clear-global-search" onclick="clearGlobalSearch()" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-white">
+                            ✕
+                        </button>
+                    </div>
+                    <button onclick="openRandomRecipe()" class="px-6 py-3.5 rounded-2xl bg-saffron-500 hover:bg-saffron-600 text-stone-950 font-bold text-sm transition shadow-lg shadow-saffron-500/20 flex items-center justify-center gap-2 shrink-0">
+                        <span>Nima pishirsam ekan?</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </button>
+                </div>
+
+                <!-- Ommabop To'plamlar (Quick Combos) -->
+                <div class="pt-3 flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-semibold text-stone-400 mr-1">Ommabop to‘plamlar:</span>
+                    <button onclick="applyCombo('breakfast')" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-saffron-500 hover:text-stone-950 border border-white/10 text-xs font-semibold transition">
+                        Tezkor nonushta
+                    </button>
+                    <button onclick="applyCombo('meatDinner')" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-saffron-500 hover:text-stone-950 border border-white/10 text-xs font-semibold transition">
+                        Go‘shtli kechki ovqat
+                    </button>
+                    <button onclick="applyCombo('lightSalad')" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-saffron-500 hover:text-stone-950 border border-white/10 text-xs font-semibold transition">
+                        Yengil salatlar
+                    </button>
+                    <button onclick="applyCombo('studentMenu')" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-saffron-500 hover:text-stone-950 border border-white/10 text-xs font-semibold transition">
+                        Talabalar menyusi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ASOSIY ISHCHI MAYDON: CHAPDA MASALLIQLAR, O'NGDA RETSEPTLAR -->
+        <div id="workspace-section" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- CHAP PANEL: KATEGORIYALI MASALLIQLAR TANLOVI (5 ustun) -->
+            <aside class="lg:col-span-5 bg-white dark:bg-charcoal rounded-3xl p-5 sm:p-6 shadow-sm border border-stone-200/80 dark:border-stone-800 lg:sticky lg:top-24">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-stone-900 dark:text-white">Mavjud masalliqlar</h2>
+                        <p class="text-xs text-stone-500 dark:text-stone-400">Oshxonangizda bor mahsulotlarni belgilang</p>
+                    </div>
+                    <button onclick="clearAllIngredients()" id="clear-pantry-btn" class="hidden text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline px-2.5 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 transition">
+                        Barchasini tozalash
+                    </button>
+                </div>
+
+                <!-- Tanlangan masalliqlar holati -->
+                <div id="selected-pantry-box" class="hidden mb-4 p-3.5 rounded-2xl bg-sage-50 dark:bg-sage-700/20 border border-sage-500/20">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-sage-700 dark:text-emerald-300">
+                            Tanlangan masalliqlar (<span id="selected-count-text">0</span> ta):
+                        </span>
+                    </div>
+                    <div id="selected-pills" class="flex flex-wrap gap-1.5"></div>
+                </div>
+
+                <!-- Masalliq kategoriyalari (Tabs) -->
+                <div id="ingredient-categories" class="flex items-center gap-1.5 overflow-x-auto pb-2 mb-4 border-b border-stone-100 dark:border-stone-800">
+                    <!-- JS orqali yaratiladi -->
+                </div>
+
+                <!-- Masalliqlar ro'yxati (Grid) -->
+                <div id="ingredients-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2.5 max-h-[460px] overflow-y-auto pr-1">
+                    <!-- JS orqali yaratiladi -->
+                </div>
+            </aside>
+
+            <!-- O'NG PANEL: AQLLI RETSEPTLAR NATIJALARI (7 ustun) -->
+            <section class="lg:col-span-7 space-y-5">
+                
+                <!-- Filtr va Saralash Boshqaruv Paneli -->
+                <div class="bg-white dark:bg-charcoal rounded-3xl p-4 sm:p-5 shadow-sm border border-stone-200/80 dark:border-stone-800 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h2 class="text-xl font-bold text-stone-900 dark:text-white flex items-center gap-2">
+                                <span>Tavsiya etilgan taomlar</span>
+                                <span id="recipe-total-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">0</span>
+                            </h2>
+                            <p id="matching-status-text" class="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                                Barcha sara retseptlar ko‘rsatilmoqda
+                            </p>
+                        </div>
+
+                        <!-- Saralash (Sort Dropdown) -->
+                        <div class="flex items-center gap-2">
+                            <label for="sort-select" class="text-xs font-semibold text-stone-500 dark:text-stone-400 shrink-0">Saralash:</label>
+                            <select id="sort-select" onchange="renderRecipes()" class="bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none focus:border-saffron-500">
+                                <option value="match">Moslik darajasi bo‘yicha</option>
+                                <option value="time">Vaqti bo‘yicha (tezdan sekinga)</option>
+                                <option value="calories">Kaloriyasi bo‘yicha (pastdan yuqoriga)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Retsept Filtrlari -->
+                    <div id="recipe-filters" class="flex items-center gap-2 overflow-x-auto pb-1">
+                        <button onclick="setRecipeFilter('all')" data-filter="all" class="recipe-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-900 text-white dark:bg-saffron-500 dark:text-stone-950 transition shrink-0">
+                            Barchasi
+                        </button>
+                        <button onclick="setRecipeFilter('ready')" data-filter="ready" class="recipe-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition shrink-0">
+                            Tayyorlash mumkin (100%)
+                        </button>
+                        <button onclick="setRecipeFilter('fast')" data-filter="fast" class="recipe-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition shrink-0">
+                            Tezkor (20 daqiqagacha)
+                        </button>
+                        <button onclick="setRecipeFilter('national')" data-filter="national" class="recipe-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition shrink-0">
+                            Milliy taomlar
+                        </button>
+                        <button onclick="setRecipeFilter('european')" data-filter="european" class="recipe-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition shrink-0">
+                            Yevropa oshxonasi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Retseptlar Katalogi (Grid) -->
+                <div id="recipes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- JS orqali yaratiladi -->
+                </div>
+
+                <!-- Hech narsa topilmaganda ko'rinadigan holat -->
+                <div id="empty-recipes-state" class="hidden bg-white dark:bg-charcoal rounded-3xl p-10 text-center border border-stone-200/80 dark:border-stone-800">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-400">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-stone-900 dark:text-white mb-1">Mos keluvchi taom topilmadi</h3>
+                    <p class="text-sm text-stone-500 dark:text-stone-400 max-w-md mx-auto mb-5">
+                        Tanlangan filtr yoki masalliqlar bo‘yicha retsept topilmadi. Filtrlarni o‘zgartiring yoki ko‘proq masalliq qo‘shing.
+                    </p>
+                    <button onclick="resetAllFilters()" class="px-5 py-2.5 rounded-xl bg-saffron-500 hover:bg-saffron-600 text-stone-950 font-bold text-sm transition">
+                        Barcha filtrlarni tiklash
+                    </button>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-stone-200/80 dark:border-stone-800 bg-white/50 dark:bg-charcoal/50 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5">
+                <span class="font-extrabold tracking-wider text-stone-900 dark:text-white">TA'M<span class="text-saffron-500">LAB</span></span>
+                <span class="text-xs text-stone-400">|</span>
+                <span class="text-xs text-stone-500 dark:text-stone-400">Aqlli Oshxona Yordamchisi © 2026</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-medium text-stone-500 dark:text-stone-400">
+                <button onclick="navigateToHome()" class="hover:text-saffron-500 transition">Bosh sahifa</button>
+                <button onclick="openDrawer('saved')" class="hover:text-saffron-500 transition">Saqlangan retseptlar</button>
+                <button onclick="openDrawer('shopping')" class="hover:text-saffron-500 transition">Xarid ro‘yxati</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- RETSEPT TAFSILOTLARI MODALI (RICH RECIPE MODAL) -->
+    <div id="recipe-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-stone-950/75 glass-panel overflow-y-auto">
+        <div class="relative w-full max-w-4xl bg-white dark:bg-charcoal rounded-3xl shadow-2xl border border-stone-200 dark:border-stone-800 overflow-hidden my-auto animate-slide-up max-h-[92vh] flex flex-col">
+            
+            <!-- Modal Header & Cover -->
+            <div id="modal-header-banner" class="relative h-52 sm:h-64 bg-stone-900 flex flex-col justify-end p-6 sm:p-8 text-white shrink-0">
+                <img id="modal-image" src="" alt="" class="absolute inset-0 w-full h-full object-cover opacity-55">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent"></div>
+                
+                <!-- Yuqori o'ng tugmalar -->
+                <div class="absolute top-4 right-4 z-20 flex items-center gap-2">
+                    <button id="modal-fav-btn" onclick="toggleFavoriteCurrent()" class="p-2.5 rounded-xl bg-stone-900/70 hover:bg-stone-900 text-white backdrop-blur-md transition border border-white/10" title="Saqlash">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    </button>
+                    <button onclick="copyRecipeToClipboard()" class="px-3.5 py-2.5 rounded-xl bg-stone-900/70 hover:bg-stone-900 text-white text-xs font-semibold backdrop-blur-md transition border border-white/10 flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        <span>Nusxa olish</span>
+                    </button>
+                    <button onclick="closeRecipeModal()" class="p-2.5 rounded-xl bg-stone-900/70 hover:bg-rose-600 text-white backdrop-blur-md transition border border-white/10">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                <div class="relative z-10 space-y-2">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="modal-category-badge" class="px-2.5 py-1 rounded-lg bg-saffron-500 text-stone-950 text-xs font-bold uppercase tracking-wider">Milliy taom</span>
+                        <span id="modal-match-badge" class="px-2.5 py-1 rounded-lg bg-sage-600 text-white text-xs font-bold">100% Mos keladi</span>
+                    </div>
+                    <h2 id="modal-title" class="font-serif text-2xl sm:text-4xl font-bold text-white">Taom nomi</h2>
+                </div>
+            </div>
+
+            <!-- Modal Scrollable Content -->
+            <div class="p-6 sm:p-8 overflow-y-auto space-y-8">
+                
+                <!-- Tezkor ko'rsatkichlar va Porsiya boshqaruvi -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700/60">
+                        <span class="text-xs text-stone-500 dark:text-stone-400 block">Tayyorlash vaqti</span>
+                        <span id="modal-time" class="text-base font-bold text-stone-900 dark:text-white mt-0.5 block">30 daqiqa</span>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700/60">
+                        <span class="text-xs text-stone-500 dark:text-stone-400 block">Qiyinlik darajasi</span>
+                        <span id="modal-difficulty" class="text-base font-bold text-stone-900 dark:text-white mt-0.5 block">O‘rtacha</span>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700/60">
+                        <span class="text-xs text-stone-500 dark:text-stone-400 block">Kaloriya (1 porsiya)</span>
+                        <span id="modal-calories" class="text-base font-bold text-stone-900 dark:text-white mt-0.5 block">450 kkal</span>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-saffron-500/30">
+                        <span class="text-xs text-saffron-700 dark:text-saffron-400 font-semibold block">Porsiya miqdori</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <button onclick="changeServings(-1)" class="w-7 h-7 rounded-lg bg-white dark:bg-stone-800 font-bold text-stone-800 dark:text-white shadow-sm hover:bg-saffron-500 hover:text-stone-950 transition">-</button>
+                            <span id="modal-servings" class="text-base font-extrabold text-stone-900 dark:text-white min-w-[55px] text-center">4 kishi</span>
+                            <button onclick="changeServings(1)" class="w-7 h-7 rounded-lg bg-white dark:bg-stone-800 font-bold text-stone-800 dark:text-white shadow-sm hover:bg-saffron-500 hover:text-stone-950 transition">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Qisqa tavsif -->
+                <p id="modal-description" class="text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed"></p>
+
+                <!-- Ikki ustun: Masalliqlar va Tayyorlash Taymeri -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    <!-- Masalliqlar ro'yxati (5 ustun) -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-stone-900 dark:text-white">Kerakli masalliqlar</h3>
+                            <button id="add-all-missing-btn" onclick="addAllMissingToShopping()" class="hidden text-xs font-bold text-saffron-600 dark:text-saffron-400 hover:underline">
+                                + Kamlarini ro‘yxatga qo‘shish
+                            </button>
+                        </div>
+                        <ul id="modal-ingredients-list" class="space-y-2.5">
+                            <!-- JS orqali yaratiladi -->
+                        </ul>
+                    </div>
+
+                    <!-- Tayyorlash bosqichlari va Interaktiv Taymer (7 ustun) -->
+                    <div class="lg:col-span-7 space-y-5">
+                        
+                        <!-- Interaktiv Oshxona Taymeri -->
+                        <div class="p-4 rounded-2xl bg-stone-900 text-white flex flex-wrap items-center justify-between gap-4 border border-stone-800">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-saffron-500/20 text-saffron-400 flex items-center justify-center">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-stone-400 block">Oshxona taymeri</span>
+                                    <span id="timer-display" class="text-xl font-mono font-bold text-saffron-400">15:00</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="adjustTimer(-60)" class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-xs font-semibold">-1m</button>
+                                <button onclick="adjustTimer(60)" class="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-xs font-semibold">+1m</button>
+                                <button id="timer-toggle-btn" onclick="toggleTimer()" class="px-4 py-1.5 rounded-xl bg-saffron-500 hover:bg-saffron-600 text-stone-950 font-bold text-xs transition">
+                                    Boshlash
+                                </button>
+                                <button onclick="resetTimer()" class="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold transition">
+                                    Qayta
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Qadam-baqadam yo'riqnoma -->
+                        <div>
+                            <h3 class="text-lg font-bold text-stone-900 dark:text-white mb-3">Tayyorlash bosqichlari</h3>
+                            <p class="text-xs text-stone-500 dark:text-stone-400 mb-3">Bajarilgan bosqich ustiga bosib belgilab boring:</p>
+                            <div id="modal-steps-list" class="space-y-3">
+                                <!-- JS orqali yaratiladi -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- YON PANEL (DRAWER): XARID RO'YXATI VA SAQLANGANLAR -->
+    <div id="side-drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 z-50 hidden bg-stone-950/60 glass-panel transition-opacity"></div>
+    <aside id="side-drawer" class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white dark:bg-charcoal shadow-2xl border-l border-stone-200 dark:border-stone-800 transform translate-x-full transition-transform duration-300 flex flex-col">
+        
+        <!-- Drawer Header -->
+        <div class="p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <button onclick="switchDrawerTab('shopping')" id="drawer-tab-shopping" class="px-3.5 py-2 rounded-xl text-sm font-bold bg-stone-900 text-white dark:bg-saffron-500 dark:text-stone-950 transition">
+                    Xarid ro‘yxati
+                </button>
+                <button onclick="switchDrawerTab('saved')" id="drawer-tab-saved" class="px-3.5 py-2 rounded-xl text-sm font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition">
+                    Saqlanganlar
+                </button>
+            </div>
+            <button onclick="closeDrawer()" class="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-rose-500 hover:text-white transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <!-- Drawer Body: Shopping List -->
+        <div id="drawer-content-shopping" class="flex-1 overflow-y-auto p-5 space-y-4">
+            <form onsubmit="addManualShoppingItem(event)" class="flex gap-2">
+                <input type="text" id="manual-shopping-input" placeholder="Yangi mahsulot qo‘shish..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-sm focus:outline-none focus:border-saffron-500">
+                <button type="submit" class="px-4 py-2.5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-sm font-bold transition">
+                    Qo‘shish
+                </button>
+            </form>
+
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-stone-500 dark:text-stone-400">Olinishi kerak bo‘lgan mahsulotlar:</span>
+                <button onclick="clearShoppingList()" class="text-xs font-semibold text-rose-500 hover:underline">Tozalash</button>
+            </div>
+
+            <ul id="shopping-list-items" class="space-y-2">
+                <!-- JS orqali to'ldiriladi -->
+            </ul>
+        </div>
+
+        <!-- Drawer Body: Saved Recipes -->
+        <div id="drawer-content-saved" class="hidden flex-1 overflow-y-auto p-5 space-y-3">
+            <p class="text-xs text-stone-500 dark:text-stone-400">Siz yoqtirgan va saqlab qo‘ygan sara retseptlar:</p>
+            <div id="saved-recipes-list" class="space-y-3">
+                <!-- JS orqali to'ldiriladi -->
+            </div>
+        </div>
+    </aside>
+
+    <!-- TOAST BILDIRISHNOMA (XABARNOMA) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        // ==========================================
+        // 1. MASALLIQLAR BAZASI (INGREDIENTS DATABASE)
+        // ==========================================
+        const INGREDIENTS_DB = [
+            // Go'sht va Tuxum
+            { id: 'beef', name: 'Mol go‘shti', category: 'meat' },
+            { id: 'lamb', name: 'Qo‘y go‘shti', category: 'meat' },
+            { id: 'chicken', name: 'Tovuq go‘shti', category: 'meat' },
+            { id: 'minced_meat', name: 'Qiyma go‘sht', category: 'meat' },
+            { id: 'egg', name: 'Tuxum', category: 'meat' },
+            { id: 'sausage', name: 'Kolbasa / Sosiska', category: 'meat' },
+
+            // Sabzavot va Ko'katlar
+            { id: 'potato', name: 'Kartoshka', category: 'veg' },
+            { id: 'onion', name: 'Piyoz', category: 'veg' },
+            { id: 'carrot', name: 'Sabzi', category: 'veg' },
+            { id: 'tomato', name: 'Pomidor', category: 'veg' },
+            { id: 'cucumber', name: 'Bodring', category: 'veg' },
+            { id: 'bell_pepper', name: 'Bulg‘or qalampiri', category: 'veg' },
+            { id: 'garlic', name: 'Sarimsoq piyoz', category: 'veg' },
+            { id: 'cabbage', name: 'Karam', category: 'veg' },
+            { id: 'greens', name: 'Ko‘katlar (ukrop, kashnich)', category: 'veg' },
+            { id: 'mushroom', name: 'Qo‘ziqorin', category: 'veg' },
+
+            // Sut mahsulotlari
+            { id: 'cheese', name: 'Pishloq', category: 'dairy' },
+            { id: 'feta', name: 'Brinza / Feta', category: 'dairy' },
+            { id: 'milk', name: 'Sut', category: 'dairy' },
+            { id: 'cream', name: 'Qaymoq (Slivki)', category: 'dairy' },
+            { id: 'sour_cream', name: 'Smetana / Qatiq', category: 'dairy' },
+            { id: 'butter', name: 'Sariyog‘', category: 'dairy' },
+
+            // Don, Un va Xamir
+            { id: 'rice', name: 'Guruch', category: 'grain' },
+            { id: 'flour', name: 'Un', category: 'grain' },
+            { id: 'pasta', name: 'Makaron / Spagetti', category: 'grain' },
+            { id: 'bread', name: 'Non / Toster noni', category: 'grain' },
+            { id: 'lavash', name: 'Lavash xamiri', category: 'grain' },
+            { id: 'puff_pastry', name: 'Qatlama xamir', category: 'grain' },
+
+            // Ziravor, Moy va Souslar
+            { id: 'oil', name: 'O‘simlik yog‘i', category: 'spice' },
+            { id: 'olive_oil', name: 'Zaytun moyi', category: 'spice' },
+            { id: 'tomato_paste', name: 'Tomat pastasi', category: 'spice' },
+            { id: 'cumin', name: 'Zira va kashnich urug‘i', category: 'spice' },
+            { id: 'soy_sauce', name: 'Soya sousi', category: 'spice' },
+            { id: 'banana', name: 'Banan', category: 'grain' }
+        ];
+
+        const CATEGORIES = [
+            { id: 'all', label: 'Barchasi' },
+            { id: 'meat', label: 'Go‘sht va Tuxum' },
+            { id: 'veg', label: 'Sabzavotlar' },
+            { id: 'dairy', label: 'Sut mahsulotlari' },
+            { id: 'grain', label: 'Don va Un' },
+            { id: 'spice', label: 'Ziravor va Souslar' }
+        ];
+
+        // ==========================================
+        // 2. BOYITILGAN RETSEPTLAR BAZASI (15 TA TAOM)
+        // ==========================================
+        const RECIPES_DB = [
+            {
+                id: 'qozon_kabob',
+                title: 'An’anaviy Qozon Kabob',
+                cuisine: 'national',
+                cuisineLabel: 'Milliy taom',
+                time: 55,
+                difficulty: 'O‘rtacha',
+                calories: 680,
+                baseServings: 4,
+                image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+                description: 'Sirti qizargan, ichi yumshoq va suvli pishgan go‘sht hamda tillarang kartoshkadan iborat shohona o‘zbek taomi.',
+                ingredients: [
+                    { id: 'lamb', amount: 800, unit: 'gr' },
+                    { id: 'potato', amount: 800, unit: 'gr' },
+                    { id: 'onion', amount: 2, unit: 'dona' },
+                    { id: 'oil', amount: 200, unit: 'ml' },
+                    { id: 'cumin', amount: 1, unit: 'osh qoshiq' },
+                    { id: 'greens', amount: 1, unit: 'bog‘' }
+                ],
+                steps: [
+                    'Go‘shtni yirik bo‘laklarga bo‘ling, tuz va zira sepib 20 daqiqa marinadlang.',
+                    'Qozonda yog‘ni yaxshilab qizdirib, butun yoki ikkiga bo‘lingan kartoshkalarni tillarang bo‘lguncha qovurib oling.',
+                    'Kartoshkalarni olib, o‘sha yog‘da go‘sht bo‘laklarini baland olovda qizartirib qovuring.',
+                    'Go‘sht ustiga kartoshkalarni tering, ozgina suv quyib, qopqog‘ini mahkam yoping va past olovda 35 daqiqa dimlang.',
+                    'Tayyor taomni halqa qilib to‘g‘ralgan piyoz va ko‘katlar bilan dasturxonga torting.'
+                ]
+            },
+            {
+                id: 'shakshuka',
+                title: 'Tuxumli Pomidor (Shakshuka)',
+                cuisine: 'european',
+                cuisineLabel: 'Yevropa / Sharq',
+                time: 15,
+                difficulty: 'Oson',
+                calories: 320,
+                baseServings: 2,
+                image: 'https://images.unsplash.com/photo-1590412227229-7174b9539852?auto=format&fit=crop&w=800&q=80',
+                description: 'Xushbo‘y pomidor va bulg‘or qalampiri qaylasida pishirilgan mukammal va to‘yimli nonushta.',
+                ingredients: [
+                    { id: 'egg', amount: 4, unit: 'dona' },
+                    { id: 'tomato', amount: 3, unit: 'dona' },
+                    { id: 'bell_pepper', amount: 1, unit: 'dona' },
+                    { id: 'onion', amount: 1, unit: 'dona' },
+                    { id: 'garlic', amount: 2, unit: 'bo‘lak' },
+                    { id: 'olive_oil', amount: 2, unit: 'osh qoshiq' },
+                    { id: 'greens', amount: 0.5, unit: 'bog‘' }
+                ],
+                steps: [
+                    'Tovada zaytun moyini qizdirib, mayda to‘g‘ralgan piyoz va bulg‘or qalampirini 4 daqiqa qovuring.',
+                    'Sarimsoq va po‘sti archilib maydalangan pomidorlarni qo‘shing, qayla quyuqlashguncha 6 daqiqa dimlang.',
+                    'Qaylada qoshiq yordamida 4 ta chuqurcha oching va har biriga bittadan tuxum chaqing.',
+                    'Qopqog‘ini yopib, tuxum oqi pishguncha (sarig‘i yumshoq qolishi kerak) 4-5 daqiqa past olovda tuting.',
+                    'Ustiga ko‘katlar sepib, issiq non bilan dasturxonga torting.'
+                ]
+            },
+            {
+                id: 'alfredo_pasta',
+                title: 'Tovuqli Qaymoqli Alfredo Pasta',
+                cuisine: 'european',
+                cuisineLabel: 'Yevropa oshxonasi',
+                time: 20,
+                difficulty: 'Oson',
+                calories: 560,
+                baseServings: 3,
+                image: 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=800&q=80',
+                description: 'Mayin qaymoqli sous, pishloq va qovurilgan tovuq filesi uyg‘unligidagi italyan klassikasi.',
+                ingredients: [
+                    { id: 'pasta', amount: 300, unit: 'gr' },
+                    { id: 'chicken', amount: 350, unit: 'gr' },
+                    { id: 'cream', amount: 200, unit: 'ml' },
+                    { id: 'cheese', amount: 80, unit: 'gr' },
+                    { id: 'butter', amount: 30, unit: 'gr' },
+                    { id: 'garlic', amount: 2, unit: 'bo‘lak' }
+                ],
+                steps: [
+                    'Makaronni tuzli qaynagan suvda "al dente" holatigacha (taxminan 8-9 daqiqa) pishirib oling.',
+                    'Tovada sariyog‘ni eritib, somoncha to‘g‘ralgan tovuq go‘shtini tillarang bo‘lguncha qovuring.',
+                    'Maydalangan sarimsoq va qaymoqni tovaga quying, tuz va murch sepib 3 daqiqa past olovda qaynating.',
+                    'Qirg‘ichdan chiqarilgan pishloq va pishgan makaronni sousga qo‘shib yaxshilab aralashtiring.',
+                    'Darhol issiq holatda likopchalarga suzib torting.'
+                ]
+            },
+            {
+                id: 'mastava',
+                title: 'Xushbo‘y O‘zbek Mastavasi',
+                cuisine: 'national',
+                cuisineLabel: 'Milliy taom',
+                time: 45,
+                difficulty: 'Oson',
+                calories: 410,
+                baseServings: 4,
+                image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80',
+                description: 'Qatiq va ko‘katlar bilan tortiladigan, tanaga quvvat beruvchi quyuq guruchli sho‘rva.',
+                ingredients: [
+                    { id: 'beef', amount: 350, unit: 'gr' },
+                    { id: 'rice', amount: 150, unit: 'gr' },
+                    { id: 'potato', amount: 2, unit: 'dona' },
+                    { id: 'carrot', amount: 1, unit: 'dona' },
+                    { id: 'onion', amount: 1, unit: 'dona' },
+                    { id: 'tomato_paste', amount: 1, unit: 'osh qoshiq' },
+                    { id: 'oil', amount: 60, unit: 'ml' },
+                    { id: 'sour_cream', amount: 100, unit: 'gr' }
+                ],
+                steps: [
+                    'Go‘sht, kartoshka va sabzini mayda kubik shaklida to‘g‘rang.',
+                    'Qozonda yog‘ni qizdirib, go‘sht va piyozni qizartirib qovuring, so‘ngra sabzi va tomat pastasini qo‘shing.',
+                    '2 litr suv quyib qaynatib oling, tuz va zira soling.',
+                    'Yuvilgan guruch va kartoshkani solib, barcha masalliqlar yumshaguncha 20 daqiqa pishiring.',
+                    'Kosaga suzib, ustiga bir qoshiq qatiq va maydalangan ko‘katlar solib torting.'
+                ]
+            },
+            {
+                id: 'greek_salad',
+                title: 'Klassik Grek Salati',
+                cuisine: 'european',
+                cuisineLabel: 'Yevropa oshxonasi',
+                time: 10,
+                difficulty: 'Juda oson',
+                calories: 210,
+                baseServings: 2,
+                image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80',
+                description: 'Yangi sabzavotlar, brinza pishlog‘i va zaytun moyidan tayyorlanadigan tetiklantiruvchi salat.',
+                ingredients: [
+                    { id: 'tomato', amount: 2, unit: 'dona' },
+                    { id: 'cucumber', amount: 2, unit: 'dona' },
+                    { id: 'bell_pepper', amount: 1, unit: 'dona' },
+                    { id: 'feta', amount: 120, unit: 'gr' },
+                    { id: 'onion', amount: 0.5, unit: 'dona' },
+                    { id: 'olive_oil', amount: 3, unit: 'osh qoshiq' }
+                ],
+                steps: [
+                    'Pomidor, bodring va bulg‘or qalampirini yirik kubik shaklida to‘g‘rang.',
+                    'Piyozni yupqa yarim halqa qilib to‘g‘rab, sabzavotlarga qo‘shing.',
+                    'Zaytun moyi, tuz va bir chimdim quritilgan rayhon sepib ehtiyotkorlik bilan aralashtiring.',
+                    'Ustiga kubik shaklida kesilgan brinza (feta) pishlog‘ini terib chiqing.'
+                ]
+            },
+            {
+                id: 'chicken_quesadilla',
+                title: 'Pishloqli Tovuqli Kesadilya',
+                cuisine: 'european',
+                cuisineLabel: 'Meksika / Yevropa',
+                time: 18,
+                difficulty: 'Oson',
+                calories: 490,
+                baseServings: 2,
+                image: 'https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=800&q=80',
+                description: 'Qarsildoq lavash ichida erigan pishloq, tovuq go‘shti va sabzavotli tezkor taom.',
+                ingredients: [
+                    { id: 'lavash', amount: 2, unit: 'dona' },
+                    { id: 'chicken', amount: 250, unit: 'gr' },
+                    { id: 'cheese', amount: 150, unit: 'gr' },
+                    { id: 'bell_pepper', amount: 1, unit: 'dona' },
+                    { id: 'tomato', amount: 1, unit: 'dona' },
+                    { id: 'oil', amount: 1, unit: 'osh qoshiq' }
+                ],
+                steps: [
+                    'Tovuq filesini mayda to‘g‘rab, ozgina yog‘da tuz va ziravorlar bilan 7 daqiqa qovuring.',
+                    'Lavash xamirining bir yarmiga qirg‘ichdan chiqarilgan pishloq, tovuq, maydalangan bulg‘or qalampiri va pomidorni soling.',
+                    'Lavashning ikkinchi yarmi bilan ustini yoping.',
+                    'Quruq qizdirilgan tovada har ikki tomonini 2-3 daqiqadan pishloq erib, lavash qizarguncha qovuring.',
+                    'Uchburchak shaklida kesib, smetana bilan dasturxonga torting.'
+                ]
+            },
+            {
+                id: 'qovurma_lagmon',
+                title: 'Uyg‘urcha Qovurma Lag‘mon',
+                cuisine: 'national',
+                cuisineLabel: 'Milliy taom',
+                time: 40,
+                difficulty: 'O‘rtacha',
+                calories: 590,
+                baseServings: 4,
+                image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80',
+                description: 'Baland olovda qovurilgan sabzavotlar, go‘sht va soya sousi bilan boyitilgan mazali lag‘mon.',
+                ingredients: [
+                    { id: 'beef', amount: 400, unit: 'gr' },
+                    { id: 'pasta', amount: 400, unit: 'gr' },
+                    { id: 'bell_pepper', amount: 2, unit: 'dona' },
+                    { id: 'onion', amount: 1, unit: 'dona' },
+                    { id: 'tomato', amount: 2, unit: 'dona' },
+                    { id: 'garlic', amount: 3, unit: 'bo‘lak' },
+                    { id: 'soy_sauce', amount: 2, unit: 'osh qoshiq' },
+                    { id: 'oil', amount: 80, unit: 'ml' }
+                ],
+                steps: [
+                    'Go‘shtni yupqa yaproqcha shaklida, sabzavotlarni esa yirik kubik qilib to‘g‘rang.',
+                    'Lag‘mon xamirini (yoki uzun spagettini) tuzli suvda pishirib, sovuq suvda chayib oling.',
+                    'Qizdirilgan yog‘da go‘shtni baland olovda 5 daqiqa qovuring, so‘ngra piyoz, bulg‘or qalampiri va pomidorni qo‘shing.',
+                    'Soya sousi va maydalangan sarimsoqni solib yana 4 daqiqa qovuring.',
+                    'Pishgan xamirni qozonga solib, qayla bilan 2 daqiqa aralashtirib qovuring.'
+                ]
+            },
+            {
+                id: 'draniki',
+                title: 'Qarsildoq Kartoshkali Draniklar',
+                cuisine: 'european',
+                cuisineLabel: 'Yevropa oshxonasi',
+                time: 20,
+                difficulty: 'Oson',
+                calories: 340,
+                baseServings: 3,
+                image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=800&q=80',
+                description: 'Oddiy masalliqlardan tayyorlanadigan, sirti qarsildoq va ichi yumshoq kartoshkali quymoqlar.',
+                ingredients: [
+                    { id: 'potato', amount: 500, unit: 'gr' },
+                    { id: 'egg', amount: 1, unit: 'dona' },
+                    { id: 'onion', amount: 1, unit: 'dona' },
+                    { id: 'flour', amount: 2, unit: 'osh qoshiq' },
+                    { id: 'oil', amount: 50, unit: 'ml' },
+                    { id: 'sour_cream', amount: 100, unit: 'gr' }
+                ],
+                steps: [
+                    'Kartoshka va piyozni mayda qirg‘ichdan o‘tkazing va ortiqcha suvini siqib tashlang.',
+                    'Tuxum, un va tuz qo‘shib bir xil massa hosil bo‘lguncha aralashtiring.',
+                    'Tovada yog‘ni qizdirib, qoshiq yordamida xamirdan kichik quymoqlar soling.',
+                    'Har ikki tomonini 3-4 daqiqadan oltin rangga kirguncha qovuring.',
+                    'Issiq holatda smetana bilan dasturxonga torting.'
+                ]
+            },
+            {
+                id: 'quick_plov',
+                title: 'Tezkor Tovuqli Osh (Plov)',
+                cuisine: 'national',
+                cuisineLabel: 'Milliy taom',
+                time: 45,
+                difficulty: 'O‘rtacha',
+                calories: 610,
+                baseServings: 4,
+                image: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80',
+                description: 'Kam vaqt ichida tayyor bo‘ladigan, xushbo‘y zira va sariq sabzili mazali tovuqli osh.',
+                ingredients: [
+                    { id: 'chicken', amount: 500, unit: 'gr' },
+                    { id: 'rice', amount: 400, unit: 'gr' },
+                    { id: 'carrot', amount: 400, unit: 'gr' },
+                    { id: 'onion', amount: 2, unit: 'dona' },
+                    { id: 'oil', amount: 120, unit: 'ml' },
+                    { id: 'cumin', amount: 1, unit: 'osh qoshiq' },
+                    { id: 'garlic', amount: 1, unit: 'bosh' }
+                ],
+                steps: [
+                    'Guruchni iliq tuzli suvda 20 daqiqa ivitib qo‘ying.',
+                    'Qozonda yog‘ni qizdirib, piyoz va bo‘laklangan tovuq go‘shtini qizartirib qovuring.',
+                    'Somoncha to‘g‘ralgan sabzini solib 7 daqiqa qovuring, suv quyib zira va tuz soling (zirvak).',
+                    'Zirvak 15 daqiqa qaynagach, guruchni tekis qilib soling va suvini tortguncha pishiring.',
+                    'Qopqog‘ini yopib, past olovda 15 daqiqa damlang.'
+                ]
+            },
+            {
+                id: 'cheese_omelet',
+                title: 'Fransuzcha Pishloqli Omlet',
+                cuisine: 'european',
+                cuisineLabel: 'Yevropa oshxonasi',
+                time: 10,
+                difficulty: 'Juda oson',
+                calories: 360,
+                baseServings: 1,
+                image: 'https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=800&q=80',
+                description: 'Baxmaldek mayin tuzilishga ega, ichi cho‘ziluvchan pishloqli klassik nonushta.',
+                ingredients: [
+                    { id: 'egg', amount: 3, unit: 'dona' },
+                    { id: 'cheese', amount: 50, unit: 'gr' },
+                    { id: 'milk', amount: 30, unit: 'ml' },
+                    { id: 'butter', amount: 15, unit: 'gr' },
+                    { id: 'greens', amount: 0.2, unit: 'bog‘' }
+                ],
+                steps: [
+                    'Tuxumlarni sut va bir chimdim tuz bilan sanchqi yordamida yaxshilab ko‘pirtiring.',
+                    'Tovada sariyog‘ni o‘rtacha olovda eriting (kuyib ketmasligiga e’tibor bering).',
+                    'Tuxumli massani quying va chetlari pishishni boshlaganda o‘rtasiga qirg‘ichlangan pishloq seping.',
+                    'Omletni rulet yoki yarim oy shaklida buklab, 1 daqiqadan so‘ng likopchaga oling.'
+                ]
+            },
+            {
+                id: 'manti',
+                title: 'Qovoq va Go‘shtli Manti',
+                cuisine: 'national',
+                cuisineLabel: 'Milliy taom',
+                time: 60,
+                difficulty: 'Qiyinroq',
+                calories: 520,
+                baseServings: 4,
+                image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=800&q=80',
+                description: 'Yupqa xamir va sersuv qiyma-piyozli nachinkadan bug‘da pishirilgan an’anaviy taom.',
+                ingredients: [
+                    { id: 'flour', amount: 500, unit: 'gr' },
+                    { id: 'minced_meat', amount: 500, unit: 'gr' },
+                    { id: 'onion', amount: 4, unit: 'dona' },
+                    { id: 'egg', amount: 1, unit: 'dona' },
+                    { id: 'cumin', amount: 1, unit: 'choy qoshiq' },
+                    { id: 'sour_cream', amount: 100, unit: 'gr' }
+                ],
+                steps: [
+                    'Un, tuxum, tuz va iliq suvdan o‘rtacha qattiqlikda xamir qoring va 20 daqiqa tindiring.',
+                    'Qiyma go‘shtga mayda to‘g‘ralgan ko‘p piyoz, tuz, murch va zira qo‘shib aralashtiring.',
+                    'Xamirni yupqa yoyib, kvadrat shaklida kesing va har biriga nachinka solib tuging.',
+                    'Mantiqasqon listlarini yog‘lab, mantilarni tering va qaynayotgan suv bug‘ida 40 daqiqa pishiring.'
+                ]
+            },
+            {
+                id: 'banana_pancakes',
+                title: 'Bananli Parhezbop Pankeyklar',
+                cuisine: 'european',
+                cuisineLabel: 'Yevropa oshxonasi',
+                time: 15,
+                difficulty: 'Juda oson',
+                calories: 290,
+                baseServings: 2,
+                image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80',
+                description: 'Shakarsiz, tabiiy banan shirinligi bilan tayyorlanadigan yumshoq va foydali quymoqlar.',
+                ingredients: [
+                    { id: 'banana', amount: 2, unit: 'dona' },
+                    { id: 'egg', amount: 2, unit: 'dona' },
+                    { id: 'flour', amount: 4, unit: 'osh qoshiq' },
+                    { id: 'milk', amount: 50, unit: 'ml' },
+                    { id: 'butter', amount: 10, unit: 'gr' }
+                ],
+                steps: [
+                    'Pishgan bananlarni sanchqi yordamida pyure holatiga keltirib ezing.',
+                    'Tuxum va sutni qo‘shib aralashtiring, so‘ngra un solib quyuq xamir tayyorlang.',
+                    'Qizdirilgan tovada har ikki tomonini 2 daqiqadan qizartirib pishiring.',
+                    'Mevalar yoki asal bilan dasturxonga torting.'
+                ]
+            },
+            {
+                id: 'somsa',
+                title: 'Qatlama Xamirli Go‘shtli Somsa',
+                cuisine: 'national',
+                cuisineLabel: 'Milliy taom',
+                time: 45,
+                difficulty: 'Oson',
+                calories: 470,
+                baseServings: 4,
+                image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80',
+                description: 'Tayyor qatlama xamirdan tez va oson tayyorlanadigan, og‘izda eriydigan sersuv somsa.',
+                ingredients: [
+                    { id: 'puff_pastry', amount: 500, unit: 'gr' },
+                    { id: 'beef', amount: 400, unit: 'gr' },
+                    { id: 'onion', amount: 3, unit: 'dona' },
+                    { id: 'egg', amount: 1, unit: 'dona' },
+                    { id: 'cumin', amount: 1, unit: 'choy qoshiq' }
+                ],
+                steps: [
+                    'Go‘sht va piyozni mayda kubik qilib to‘g‘rang, tuz, murch va zira bilan aralashtiring.',
+                    'Qatlama xamirni bo‘laklarga bo‘lib, biroz yoying va ichiga nachinka solib uchburchak shaklida tuging.',
+                    'Somsalar ustiga ko‘pirtirilgan tuxum sarig‘ini surting.',
+                    '200°C darajada qizdirilgan duxovkada 30-35 daqiqa davomida qizarguncha pishiring.'
+                ]
+            },
+            {
+                id: 'dimlama',
+                title: 'Sabzavotli O‘zbek Dimlamasi',
+                cuisine: 'national',
+                cuisineLabel: 'Milliy taom',
+                time: 60,
+                difficulty: 'Oson',
+                calories: 480,
+                baseServings: 5,
+                image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80',
+                description: 'O‘z sharbatida sekin dimlab pishiriladigan, vitaminlarga boy to‘yimli oilaviy taom.',
+                ingredients: [
+                    { id: 'beef', amount: 600, unit: 'gr' },
+                    { id: 'potato', amount: 500, unit: 'gr' },
+                    { id: 'cabbage', amount: 300, unit: 'gr' },
+                    { id: 'carrot', amount: 2, unit: 'dona' },
+                    { id: 'onion', amount: 2, unit: 'dona' },
+                    { id: 'tomato', amount: 3, unit: 'dona' },
+                    { id: 'bell_pepper', amount: 2, unit: 'dona' },
+                    { id: 'oil', amount: 80, unit: 'ml' }
+                ],
+                steps: [
+                    'Qozon tubiga ozgina yog‘ quyib, go‘sht va piyozni qavat qilib tering.',
+                    'Ustidan yirik to‘g‘ralgan sabzi, kartoshka, pomidor va bulg‘or qalampirini qavatma-qavat joylashtiring.',
+                    'Har bir qavatga tuz va ziravorlar seping, eng ustini karam barglari bilan yoping.',
+                    'Qopqog‘ini mahkam yopib, juda past olovda 50 daqiqa o‘z sharbatida dimlang.'
+                ]
+            },
+            {
+                id: 'mushroom_toast',
+                title: 'Qo‘ziqorin va Pishloqli Issiq Brusketta',
+                cuisine: 'european',
+                cuisineLabel: 'Yevropa oshxonasi',
+                time: 15,
+                difficulty: 'Juda oson',
+                calories: 310,
+                baseServings: 2,
+                image: 'https://images.unsplash.com/photo-1525351484163-7529414342d8?auto=format&fit=crop&w=800&q=80',
+                description: 'Qovurilgan qo‘ziqorin va erigan pishloq bilan bezatilgan qarsildoq non bo‘laklari.',
+                ingredients: [
+                    { id: 'bread', amount: 4, unit: 'bo‘lak' },
+                    { id: 'mushroom', amount: 200, unit: 'gr' },
+                    { id: 'cheese', amount: 80, unit: 'gr' },
+                    { id: 'garlic', amount: 1, unit: 'bo‘lak' },
+                    { id: 'butter', amount: 20, unit: 'gr' }
+                ],
+                steps: [
+                    'Non bo‘laklarini quruq tovada yoki tosterda qarsildoq bo‘lguncha qizartiring va sarimsoq surting.',
+                    'Parra-parra to‘g‘ralgan qo‘ziqorinlarni sariyog‘da 6 daqiqa qovuring, tuz va murch seping.',
+                    'Qovurilgan qo‘ziqorinlarni non ustiga qo‘ying va ustidan qirg‘ichlangan pishloq seping.',
+                    'Pishloq eriguncha 2 daqiqa qopqoq ostida yoki duxovkada tuting.'
+                ]
+            }
+        ];
+
+        // ==========================================
+        // 3. ILOVA HOLATI (APPLICATION STATE)
+        // ==========================================
+        let state = {
+            selectedIngredients: new Set(['egg', 'tomato', 'onion', 'oil']), // Boshlang'ich namuna
+            activeCategory: 'all',
+            recipeFilter: 'all',
+            searchQuery: '',
+            savedRecipes: new Set(JSON.parse(localStorage.getItem('tamlab_saved') || '[]')),
+            shoppingList: JSON.parse(localStorage.getItem('tamlab_shopping') || '[]'),
+            currentModalRecipe: null,
+            currentServings: 4,
+            completedSteps: new Set(),
+            timerSeconds: 900, // 15 daqiqa
+            timerRunning: false,
+            timerInterval: null
+        };
+
+        // ==========================================
+        // 4. INITSIALIZATSIYA VA MAVZU (THEME)
+        // ==========================================
+        function initApp() {
+            // Saqlangan mavzuni tekshirish
+            if (localStorage.getItem('tamlab_theme') === 'dark' || 
+               (!localStorage.getItem('tamlab_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                updateThemeIcons(true);
+            }
+
+            renderCategories();
+            renderIngredients();
+            updateSelectedPantryUI();
+            renderRecipes();
+            updateBadges();
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('tamlab_theme', isDark ? 'dark' : 'light');
+            updateThemeIcons(isDark);
+            showToast(isDark ? 'Tungi rejim yoqildi' : 'Kunduzgi rejim yoqildi');
+        }
+
+        function updateThemeIcons(isDark) {
+            document.getElementById('icon-moon').classList.toggle('hidden', isDark);
+            document.getElementById('icon-sun').classList.toggle('hidden', !isDark);
+        }
+
+        // ==========================================
+        // 5. MASALLIQLARNI BOSHQARISH (PANTRY ENGINE)
+        // ==========================================
+        function renderCategories() {
+            const container = document.getElementById('ingredient-categories');
+            container.innerHTML = CATEGORIES.map(cat => {
+                const isActive = state.activeCategory === cat.id;
+                return `
+                    <button 
+                        onclick="setIngredientCategory('${cat.id}')"
+                        class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+                            isActive 
+                            ? 'bg-stone-900 text-white dark:bg-saffron-500 dark:text-stone-950 shadow-sm' 
+                            : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+                        }">
+                        ${cat.label}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setIngredientCategory(catId) {
+            state.activeCategory = catId;
+            renderCategories();
+            renderIngredients();
+        }
+
+        function renderIngredients() {
+            const grid = document.getElementById('ingredients-grid');
+            const query = state.searchQuery.toLowerCase().trim();
+
+            const filtered = INGREDIENTS_DB.filter(ing => {
+                const matchCat = state.activeCategory === 'all' || ing.category === state.activeCategory;
+                const matchQuery = !query || ing.name.toLowerCase().includes(query);
+                return matchCat && matchQuery;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-xs text-stone-500 py-6 text-center">Bunday masalliq topilmadi.</p>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(ing => {
+                const isSelected = state.selectedIngredients.has(ing.id);
+                return `
+                    <button 
+                        onclick="toggleIngredient('${ing.id}')"
+                        class="flex items-center justify-between p-3 rounded-2xl border text-left transition-all duration-200 active:scale-95 ${
+                            isSelected 
+                            ? 'bg-sage-50 dark:bg-sage-700/30 border-sage-500 text-sage-700 dark:text-emerald-300 font-bold shadow-sm' 
+                            : 'bg-stone-50/70 dark:bg-stone-800/60 border-stone-200/80 dark:border-stone-700/70 text-stone-700 dark:text-stone-200 hover:border-stone-400 dark:hover:border-stone-500 font-medium'
+                        }">
+                        <span class="text-xs sm:text-sm truncate pr-2">${ing.name}</span>
+                        <span class="w-5 h-5 rounded-lg flex items-center justify-center shrink-0 transition ${
+                            isSelected 
+                            ? 'bg-sage-600 text-white' 
+                            : 'border border-stone-300 dark:border-stone-600'
+                        }">
+                            ${isSelected ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
+                        </span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function toggleIngredient(id) {
+            if (state.selectedIngredients.has(id)) {
+                state.selectedIngredients.delete(id);
+            } else {
+                state.selectedIngredients.add(id);
+            }
+            renderIngredients();
+            updateSelectedPantryUI();
+            renderRecipes();
+            updateBadges();
+        }
+
+        function updateSelectedPantryUI() {
+            const box = document.getElementById('selected-pantry-box');
+            const pills = document.getElementById('selected-pills');
+            const countText = document.getElementById('selected-count-text');
+            const clearBtn = document.getElementById('clear-pantry-btn');
+
+            const count = state.selectedIngredients.size;
+            countText.textContent = count;
+
+            if (count === 0) {
+                box.classList.add('hidden');
+                clearBtn.classList.add('hidden');
+                return;
+            }
+
+            box.classList.remove('hidden');
+            clearBtn.classList.remove('hidden');
+
+            pills.innerHTML = Array.from(state.selectedIngredients).map(id => {
+                const ing = INGREDIENTS_DB.find(i => i.id === id);
+                if (!ing) return '';
+                return `
+                    <button onclick="toggleIngredient('${id}')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-stone-800 border border-sage-500/30 text-xs font-semibold text-stone-800 dark:text-stone-200 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950 transition">
+                        <span>${ing.name}</span>
+                        <span class="text-stone-400">✕</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function clearAllIngredients() {
+            state.selectedIngredients.clear();
+            renderIngredients();
+            updateSelectedPantryUI();
+            renderRecipes();
+            updateBadges();
+            showToast('Tanlangan masalliqlar tozalandi');
+        }
+
+        function applyCombo(comboType) {
+            const combos = {
+                breakfast: ['egg', 'tomato', 'cheese', 'milk', 'butter', 'bread'],
+                meatDinner: ['beef', 'potato', 'onion', 'carrot', 'oil', 'cumin', 'tomato_paste'],
+                lightSalad: ['tomato', 'cucumber', 'bell_pepper', 'feta', 'olive_oil', 'greens'],
+                studentMenu: ['pasta', 'egg', 'sausage', 'potato', 'oil', 'cheese']
+            };
+            const names = {
+                breakfast: 'Tezkor nonushta',
+                meatDinner: 'Go‘shtli kechki ovqat',
+                lightSalad: 'Yengil salatlar',
+                studentMenu: 'Talabalar menyusi'
+            };
+
+            state.selectedIngredients = new Set(combos[comboType] || []);
+            renderIngredients();
+            updateSelectedPantryUI();
+            renderRecipes();
+            updateBadges();
+            scrollToIngredients();
+            showToast(`"${names[comboType]}" to‘plami tanlandi`);
+        }
+
+        // ==========================================
+        // 6. AQLLI RETSEPT QIDIRUV VA SARALASH ALGORITMI
+        // ==========================================
+        function calculateMatch(recipe) {
+            const total = recipe.ingredients.length;
+            let matchedCount = 0;
+            const missing = [];
+
+            recipe.ingredients.forEach(item => {
+                if (state.selectedIngredients.has(item.id)) {
+                    matchedCount++;
+                } else {
+                    const info = INGREDIENTS_DB.find(i => i.id === item.id);
+                    missing.push(info ? info.name : item.id);
+                }
+            });
+
+            const percentage = Math.round((matchedCount / total) * 100);
+            return { percentage, matchedCount, total, missing };
+        }
+
+        function setRecipeFilter(filter) {
+            state.recipeFilter = filter;
+            document.querySelectorAll('.recipe-filter-btn').forEach(btn => {
+                const isActive = btn.dataset.filter === filter;
+                btn.className = isActive 
+                    ? 'recipe-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-900 text-white dark:bg-saffron-500 dark:text-stone-950 transition shrink-0'
+                    : 'recipe-filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition shrink-0';
+            });
+            renderRecipes();
+        }
+
+        function renderRecipes() {
+            const grid = document.getElementById('recipes-grid');
+            const emptyState = document.getElementById('empty-recipes-state');
+            const sortBy = document.getElementById('sort-select').value;
+            const query = state.searchQuery.toLowerCase().trim();
+
+            let processed = RECIPES_DB.map(recipe => ({
+                ...recipe,
+                matchInfo: calculateMatch(recipe)
+            }));
+
+            // Qidiruv bo'yicha filtrlash
+            if (query) {
+                processed = processed.filter(r => {
+                    const inTitle = r.title.toLowerCase().includes(query);
+                    const inIngs = r.ingredients.some(i => {
+                        const ingObj = INGREDIENTS_DB.find(db => db.id === i.id);
+                        return ingObj && ingObj.name.toLowerCase().includes(query);
+                    });
+                    return inTitle || inIngs;
+                });
+            }
+
+            // Kategoriya va holat filtrlari
+            if (state.recipeFilter === 'ready') {
+                processed = processed.filter(r => r.matchInfo.percentage === 100);
+            } else if (state.recipeFilter === 'fast') {
+                processed = processed.filter(r => r.time <= 20);
+            } else if (state.recipeFilter === 'national') {
+                processed = processed.filter(r => r.cuisine === 'national');
+            } else if (state.recipeFilter === 'european') {
+                processed = processed.filter(r => r.cuisine === 'european');
+            }
+
+            // Saralash
+            processed.sort((a, b) => {
+                if (sortBy === 'match') return b.matchInfo.percentage - a.matchInfo.percentage;
+                if (sortBy === 'time') return a.time - b.time;
+                if (sortBy === 'calories') return a.calories - b.calories;
+                return 0;
+            });
+
+            document.getElementById('recipe-total-badge').textContent = processed.length;
+            const statusText = document.getElementById('matching-status-text');
+            if (state.selectedIngredients.size > 0) {
+                const readyCount = processed.filter(r => r.matchInfo.percentage === 100).length;
+                statusText.textContent = `Tanlangan ${state.selectedIngredients.size} ta masalliq asosida ${readyCount} ta taom 100% tayyor`;
+            } else {
+                statusText.textContent = 'Masalliqlarni tanlang va moslik darajasini kuzating';
+            }
+
+            if (processed.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = processed.map(recipe => {
+                const { percentage, missing } = recipe.matchInfo;
+                const isSaved = state.savedRecipes.has(recipe.id);
+
+                let badgeClass = 'bg-stone-800/85 text-white';
+                let badgeText = `${percentage}% Mos keladi`;
+
+                if (percentage === 100) {
+                    badgeClass = 'bg-sage-600 text-white';
+                    badgeText = '100% Tayyorlash mumkin';
+                } else if (percentage >= 70) {
+                    badgeClass = 'bg-saffron-500 text-stone-950';
+                    badgeText = `${percentage}% Mos — ${missing.length} ta kam`;
+                }
+
+                return `
+                    <article class="group bg-white dark:bg-charcoal rounded-3xl overflow-hidden border border-stone-200/80 dark:border-stone-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+                        <div>
+                            <!-- Rasm va Badge -->
+                            <div onclick="openRecipeModal('${recipe.id}')" class="relative h-48 bg-stone-800 overflow-hidden cursor-pointer">
+                                <img src="${recipe.image}" alt="${recipe.title}" loading="lazy" onerror="this.src='https://placehold.co/600x400/1c1a18/fbbf24?text=TA%27MLAB'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-transparent to-transparent"></div>
+                                
+                                <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-xl text-xs font-bold backdrop-blur-md shadow-sm ${badgeClass}">
+                                    ${badgeText}
+                                </span>
+
+                                <button onclick="event.stopPropagation(); toggleFavorite('${recipe.id}')" class="absolute top-3.5 right-3.5 w-9 h-9 rounded-xl bg-stone-950/60 hover:bg-stone-950 text-white backdrop-blur-md flex items-center justify-center transition">
+                                    <svg class="w-4 h-4 ${isSaved ? 'text-rose-500 fill-current' : 'text-white'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                </button>
+
+                                <div class="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between text-white text-xs font-medium">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-white/15 backdrop-blur-sm">${recipe.cuisineLabel}</span>
+                                    <span class="flex items-center gap-1 bg-stone-950/60 px-2.5 py-0.5 rounded-md">
+                                        ⏱ ${recipe.time} daq
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Taom ma'lumotlari -->
+                            <div class="p-5 space-y-2.5">
+                                <h3 onclick="openRecipeModal('${recipe.id}')" class="font-serif text-xl font-bold text-stone-900 dark:text-white group-hover:text-saffron-600 dark:group-hover:text-saffron-400 transition cursor-pointer">
+                                    ${recipe.title}
+                                </h3>
+                                <p class="text-xs text-stone-500 dark:text-stone-400 line-clamp-2 leading-relaxed">
+                                    ${recipe.description}
+                                </p>
+
+                                <!-- Yetishmayotgan masalliqlar eslatmasi -->
+                                <div class="pt-1">
+                                    ${missing.length === 0 
+                                        ? `<p class="text-xs font-semibold text-sage-600 dark:text-emerald-400">✓ Barcha kerakli masalliqlar sizda bor</p>`
+                                        : `<p class="text-xs text-amber-700 dark:text-amber-400 truncate"><span class="font-semibold">Yetishmayapti:</span> ${missing.join(', ')}</p>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="px-5 pb-5 pt-2 flex items-center justify-between border-t border-stone-100 dark:border-stone-800/80">
+                            <span class="text-xs font-semibold text-stone-500 dark:text-stone-400">
+                                🔥 ${recipe.calories} kkal · ${recipe.difficulty}
+                            </span>
+                            <button onclick="openRecipeModal('${recipe.id}')" class="px-4 py-2 rounded-xl bg-stone-900 hover:bg-saffron-500 text-white hover:text-stone-950 dark:bg-stone-800 dark:hover:bg-saffron-500 dark:hover:text-stone-950 text-xs font-bold transition">
+                                Retseptni ko‘rish
+                            </button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // 7. RETSEPT TAFSILOTLARI MODALI VA PORSIYA HISOBLAGICH
+        // ==========================================
+        function openRecipeModal(recipeId) {
+            const recipe = RECIPES_DB.find(r => r.id === recipeId);
+            if (!recipe) return;
+
+            state.currentModalRecipe = recipe;
+            state.currentServings = recipe.baseServings;
+            state.completedSteps.clear();
+
+            // Taymerni taom vaqtiga moslash
+            resetTimer(recipe.time * 60);
+
+            document.getElementById('modal-image').src = recipe.image;
+            document.getElementById('modal-title').textContent = recipe.title;
+            document.getElementById('modal-category-badge').textContent = recipe.cuisineLabel;
+            document.getElementById('modal-time').textContent = `${recipe.time} daqiqa`;
+            document.getElementById('modal-difficulty').textContent = recipe.difficulty;
+            document.getElementById('modal-calories').textContent = `${recipe.calories} kkal`;
+            document.getElementById('modal-description').textContent = recipe.description;
+
+            updateModalFavoriteIcon();
+            renderModalDynamicContent();
+
+            const modal = document.getElementById('recipe-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRecipeModal() {
+            const modal = document.getElementById('recipe-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+            if (state.timerRunning) toggleTimer();
+        }
+
+        function changeServings(delta) {
+            const next = state.currentServings + delta;
+            if (next < 1 || next > 20) return;
+            state.currentServings = next;
+            renderModalDynamicContent();
+        }
+
+        function renderModalDynamicContent() {
+            const recipe = state.currentModalRecipe;
+            if (!recipe) return;
+
+            const ratio = state.currentServings / recipe.baseServings;
+            document.getElementById('modal-servings').textContent = `${state.currentServings} kishi`;
+
+            const matchInfo = calculateMatch(recipe);
+            const matchBadge = document.getElementById('modal-match-badge');
+            matchBadge.textContent = matchInfo.percentage === 100 
+                ? '100% Tayyorlash mumkin' 
+                : `${matchInfo.percentage}% Mos keladi (${matchInfo.missing.length} ta kam)`;
+            matchBadge.className = matchInfo.percentage === 100
+                ? 'px-2.5 py-1 rounded-lg bg-sage-600 text-white text-xs font-bold'
+                : 'px-2.5 py-1 rounded-lg bg-saffron-500 text-stone-950 text-xs font-bold';
+
+            const addAllMissingBtn = document.getElementById('add-all-missing-btn');
+            addAllMissingBtn.classList.toggle('hidden', matchInfo.missing.length === 0);
+
+            // Masalliqlar ro'yxatini miqdorlari bilan chiqarish
+            const ingList = document.getElementById('modal-ingredients-list');
+            ingList.innerHTML = recipe.ingredients.map(item => {
+                const ingInfo = INGREDIENTS_DB.find(i => i.id === item.id);
+                const name = ingInfo ? ingInfo.name : item.id;
+                const hasIt = state.selectedIngredients.has(item.id);
+                const scaledAmount = Math.round(item.amount * ratio * 10) / 10;
+
+                return `
+                    <li class="flex items-center justify-between p-3 rounded-2xl border ${
+                        hasIt 
+                        ? 'bg-sage-50/70 dark:bg-sage-700/20 border-sage-500/30' 
+                        : 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-500/30'
+                    }">
+                        <div class="flex items-center gap-2.5">
+                            ${hasIt 
+                                ? '<span class="w-5 h-5 rounded-full bg-sage-600 text-white flex items-center justify-center text-xs font-bold">✓</span>'
+                                : '<span class="w-5 h-5 rounded-full bg-saffron-500 text-stone-950 flex items-center justify-center text-xs font-bold">!</span>'
+                            }
+                            <div>
+                                <span class="text-sm font-semibold text-stone-900 dark:text-white block">${name}</span>
+                                <span class="text-xs text-stone-500 dark:text-stone-400">${scaledAmount} ${item.unit}</span>
+                            </div>
+                        </div>
+                        ${!hasIt ? `
+                            <button onclick="addToShoppingList('${name} (${scaledAmount} ${item.unit})')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-stone-800 hover:bg-saffron-500 hover:text-stone-950 text-xs font-bold text-stone-700 dark:text-stone-200 border border-stone-200 dark:border-stone-700 transition">
+                                + Xaridga
+                            </button>
+                        ` : '<span class="text-[11px] font-bold text-sage-600 dark:text-emerald-400">Mavjud</span>'}
+                    </li>
+                `;
+            }).join('');
+
+            // Qadam-baqadam ko'rsatmalar
+            const stepsList = document.getElementById('modal-steps-list');
+            stepsList.innerHTML = recipe.steps.map((step, idx) => {
+                const isDone = state.completedSteps.has(idx);
+                return `
+                    <div onclick="toggleStepDone(${idx})" class="p-4 rounded-2xl border cursor-pointer transition-all ${
+                        isDone 
+                        ? 'bg-stone-100/70 dark:bg-stone-800/40 border-stone-200 dark:border-stone-800 opacity-60' 
+                        : 'bg-white dark:bg-stone-800/80 border-stone-200 dark:border-stone-700 hover:border-saffron-500'
+                    }">
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+                                isDone ? 'bg-sage-600 text-white' : 'bg-stone-900 text-white dark:bg-saffron-500 dark:text-stone-950'
+                            }">
+                                ${isDone ? '✓' : idx + 1}
+                            </span>
+                            <p class="text-sm text-stone-800 dark:text-stone-200 leading-relaxed ${isDone ? 'line-through' : ''}">
+                                ${step}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleStepDone(idx) {
+            if (state.completedSteps.has(idx)) {
+                state.completedSteps.delete(idx);
+            } else {
+                state.completedSteps.add(idx);
+            }
+            renderModalDynamicContent();
+        }
+
+        // ==========================================
+        // 8. OSHXONA TAYMERI (COOKING TIMER)
+        // ==========================================
+        function updateTimerDisplay() {
+            const mins = Math.floor(state.timerSeconds / 60);
+            const secs = state.timerSeconds % 60;
+            document.getElementById('timer-display').textContent = 
+                `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function adjustTimer(delta) {
+            state.timerSeconds = Math.max(60, state.timerSeconds + delta);
+            updateTimerDisplay();
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timer-toggle-btn');
+            if (state.timerRunning) {
+                clearInterval(state.timerInterval);
+                state.timerRunning = false;
+                btn.textContent = 'Davom etish';
+            } else {
+                state.timerRunning = true;
+                btn.textContent = 'To‘xtatish';
+                state.timerInterval = setInterval(() => {
+                    if (state.timerSeconds > 0) {
+                        state.timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(state.timerInterval);
+                        state.timerRunning = false;
+                        btn.textContent = 'Boshlash';
+                        showToast('⏰ Taymer vaqti tugadi! Taomni tekshiring.');
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer(defaultSec = 900) {
+            if (state.timerRunning) {
+                clearInterval(state.timerInterval);
+                state.timerRunning = false;
+            }
+            state.timerSeconds = defaultSec;
+            document.getElementById('timer-toggle-btn').textContent = 'Boshlash';
+            updateTimerDisplay();
+        }
+
+        // ==========================================
+        // 9. XARID RO'YXATI VA SAQLANGANLAR (DRAWER)
+        // ==========================================
+        function openDrawer(tab = 'shopping') {
+            document.getElementById('side-drawer-backdrop').classList.remove('hidden');
+            document.getElementById('side-drawer').classList.remove('translate-x-full');
+            switchDrawerTab(tab);
+        }
+
+        function closeDrawer() {
+            document.getElementById('side-drawer-backdrop').classList.add('hidden');
+            document.getElementById('side-drawer').classList.add('translate-x-full');
+        }
+
+        function switchDrawerTab(tab) {
+            const isShop = tab === 'shopping';
+            document.getElementById('drawer-content-shopping').classList.toggle('hidden', !isShop);
+            document.getElementById('drawer-content-saved').classList.toggle('hidden', isShop);
+
+            document.getElementById('drawer-tab-shopping').className = isShop 
+                ? 'px-3.5 py-2 rounded-xl text-sm font-bold bg-stone-900 text-white dark:bg-saffron-500 dark:text-stone-950 transition'
+                : 'px-3.5 py-2 rounded-xl text-sm font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition';
+            
+            document.getElementById('drawer-tab-saved').className = !isShop 
+                ? 'px-3.5 py-2 rounded-xl text-sm font-bold bg-stone-900 text-white dark:bg-saffron-500 dark:text-stone-950 transition'
+                : 'px-3.5 py-2 rounded-xl text-sm font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition';
+
+            if (isShop) renderShoppingList();
+            else renderSavedRecipesList();
+        }
+
+        function addToShoppingList(itemText) {
+            if (!state.shoppingList.some(i => i.text === itemText)) {
+                state.shoppingList.push({ id: Date.now() + Math.random(), text: itemText, bought: false });
+                saveShoppingList();
+                showToast(`"${itemText}" xarid ro‘yxatiga qo‘shildi`);
+            } else {
+                showToast('Bu mahsulot ro‘yxatda allaqachon bor');
+            }
+        }
+
+        function addAllMissingToShopping() {
+            const recipe = state.currentModalRecipe;
+            if (!recipe) return;
+            const ratio = state.currentServings / recipe.baseServings;
+            let added = 0;
+
+            recipe.ingredients.forEach(item => {
+                if (!state.selectedIngredients.has(item.id)) {
+                    const ingInfo = INGREDIENTS_DB.find(i => i.id === item.id);
+                    const name = ingInfo ? ingInfo.name : item.id;
+                    const scaledAmount = Math.round(item.amount * ratio * 10) / 10;
+                    const label = `${name} (${scaledAmount} ${item.unit})`;
+                    if (!state.shoppingList.some(i => i.text === label)) {
+                        state.shoppingList.push({ id: Date.now() + Math.random(), text: label, bought: false });
+                        added++;
+                    }
+                }
+            });
+
+            saveShoppingList();
+            showToast(`${added} ta yetishmayotgan masalliq xarid ro‘yxatiga qo‘shildi`);
+        }
+
+        function addManualShoppingItem(e) {
+            e.preventDefault();
+            const input = document.getElementById('manual-shopping-input');
+            const val = input.value.trim();
+            if (!val) return;
+            state.shoppingList.push({ id: Date.now(), text: val, bought: false });
+            input.value = '';
+            saveShoppingList();
+            renderShoppingList();
+        }
+
+        function toggleShoppingItem(id) {
+            const item = state.shoppingList.find(i => i.id === id);
+            if (item) item.bought = !item.bought;
+            saveShoppingList();
+            renderShoppingList();
+        }
+
+        function clearShoppingList() {
+            state.shoppingList = [];
+            saveShoppingList();
+            renderShoppingList();
+            showToast('Xarid ro‘yxati tozalandi');
+        }
+
+        function saveShoppingList() {
+            localStorage.setItem('tamlab_shopping', JSON.stringify(state.shoppingList));
+            updateBadges();
+        }
+
+        function renderShoppingList() {
+            const list = document.getElementById('shopping-list-items');
+            if (state.shoppingList.length === 0) {
+                list.innerHTML = `<li class="text-xs text-stone-400 text-center py-8">Xarid ro‘yxatingiz hozircha bo‘sh.</li>`;
+                return;
+            }
+            list.innerHTML = state.shoppingList.map(item => `
+                <li onclick="toggleShoppingItem(${item.id})" class="flex items-center justify-between p-3 rounded-xl bg-stone-100/80 dark:bg-stone-800/70 cursor-pointer hover:bg-stone-200/70 dark:hover:bg-stone-800 transition">
+                    <div class="flex items-center gap-3">
+                        <span class="w-5 h-5 rounded-md flex items-center justify-center border ${item.bought ? 'bg-sage-600 border-sage-600 text-white' : 'border-stone-400'}">
+                            ${item.bought ? '✓' : ''}
+                        </span>
+                        <span class="text-sm font-medium ${item.bought ? 'line-through text-stone-400' : 'text-stone-800 dark:text-stone-200'}">${item.text}</span>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function toggleFavorite(recipeId) {
+            if (state.savedRecipes.has(recipeId)) {
+                state.savedRecipes.delete(recipeId);
+                showToast('Saqlanganlardan olib tashlandi');
+            } else {
+                state.savedRecipes.add(recipeId);
+                showToast('Retsept saqlanganlarga qo‘shildi');
+            }
+            localStorage.setItem('tamlab_saved', JSON.stringify(Array.from(state.savedRecipes)));
+            updateBadges();
+            renderRecipes();
+            if (state.currentModalRecipe && state.currentModalRecipe.id === recipeId) {
+                updateModalFavoriteIcon();
+            }
+        }
+
+        function toggleFavoriteCurrent() {
+            if (state.currentModalRecipe) {
+                toggleFavorite(state.currentModalRecipe.id);
+            }
+        }
+
+        function updateModalFavoriteIcon() {
+            const btn = document.getElementById('modal-fav-btn');
+            const isSaved = state.currentModalRecipe && state.savedRecipes.has(state.currentModalRecipe.id);
+            btn.innerHTML = isSaved 
+                ? `<svg class="w-5 h-5 text-rose-500 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>`
+                : `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`;
+        }
+
+        function renderSavedRecipesList() {
+            const container = document.getElementById('saved-recipes-list');
+            const savedArr = RECIPES_DB.filter(r => state.savedRecipes.has(r.id));
+
+            if (savedArr.length === 0) {
+                container.innerHTML = `<p class="text-xs text-stone-400 text-center py-8">Hali hech qanday retsept saqlanmagan.</p>`;
+                return;
+            }
+
+            container.innerHTML = savedArr.map(r => `
+                <div class="flex items-center justify-between p-3 rounded-2xl bg-stone-100/80 dark:bg-stone-800/70 border border-stone-200/60 dark:border-stone-700/60">
+                    <div onclick="closeDrawer(); openRecipeModal('${r.id}')" class="flex items-center gap-3 cursor-pointer flex-1">
+                        <img src="${r.image}" alt="${r.title}" class="w-12 h-12 rounded-xl object-cover">
+                        <div>
+                            <h4 class="text-sm font-bold text-stone-900 dark:text-white hover:text-saffron-500 transition">${r.title}</h4>
+                            <span class="text-xs text-stone-500">⏱ ${r.time} daq · ${r.calories} kkal</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleFavorite('${r.id}'); renderSavedRecipesList();" class="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg">
+                        ✕
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // 10. QO'SHIMCHA FUNKSIYALAR (QIDIRUV, TASODIFIY TAOM, NUSXA OLISH)
+        // ==========================================
+        function handleGlobalSearch() {
+            const input = document.getElementById('global-search');
+            state.searchQuery = input.value;
+            document.getElementById('clear-global-search').classList.toggle('hidden', !state.searchQuery);
+            renderIngredients();
+            renderRecipes();
+        }
+
+        function clearGlobalSearch() {
+            document.getElementById('global-search').value = '';
+            state.searchQuery = '';
+            document.getElementById('clear-global-search').classList.add('hidden');
+            renderIngredients();
+            renderRecipes();
+        }
+
+        function openRandomRecipe() {
+            const randomIndex = Math.floor(Math.random() * RECIPES_DB.length);
+            const randomDish = RECIPES_DB[randomIndex];
+            openRecipeModal(randomDish.id);
+            showToast(`🎲 Tasodifiy tavsiya: ${randomDish.title}`);
+        }
+
+        function copyRecipeToClipboard() {
+            const r = state.currentModalRecipe;
+            if (!r) return;
+            const ratio = state.currentServings / r.baseServings;
+            const ingsText = r.ingredients.map(i => {
+                const info = INGREDIENTS_DB.find(db => db.id === i.id);
+                return `- ${info ? info.name : i.id}: ${Math.round(i.amount * ratio * 10) / 10} ${i.unit}`;
+            }).join('\n');
+
+            const fullText = `🍽 ${r.title} (${state.currentServings} kishilik)\n⏱ Vaqt: ${r.time} daqiqa\n\nMasalliqlar:\n${ingsText}\n\nTayyorlanishi:\n${r.steps.map((s, idx) => `${idx + 1}. ${s}`).join('\n')}\n\n— TA'MLAB Aqlli Oshxona Yordamchisi`;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = fullText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            showToast('Retsept matni buferga nusxalandi!');
+        }
+
+        function updateBadges() {
+            document.getElementById('header-pantry-count').textContent = state.selectedIngredients.size;
+            document.getElementById('saved-count').textContent = state.savedRecipes.size;
+            document.getElementById('shopping-count').textContent = state.shoppingList.length;
+        }
+
+        function navigateToHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToIngredients() {
+            document.getElementById('workspace-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetAllFilters() {
+            clearGlobalSearch();
+            setIngredientCategory('all');
+            setRecipeFilter('all');
+            document.getElementById('sort-select').value = 'match';
+            renderRecipes();
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'px-4 py-3 rounded-2xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 text-xs font-bold shadow-xl border border-stone-700/50 dark:border-stone-300 animate-slide-up flex items-center gap-2';
+            toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-saffron-500"></span><span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(8px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2800);
+        }
+
+        // Ilovani ishga tushirish
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
